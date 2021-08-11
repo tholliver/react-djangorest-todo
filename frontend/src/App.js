@@ -2,10 +2,6 @@ import './App.css';
 import React, { Component } from 'react';
 import axios from 'axios';
 
-const instance = axios.create({
-
-  baseURL: "192.168.1.15:8000/api/"
-});
 
 class App extends Component {
   state = {
@@ -28,21 +24,22 @@ class App extends Component {
 
   render(){
     return (
-      
-        <div>
+      <div>
+        <h1>Some todos ...</h1>
+        <h2>  Gotta complete this ones: </h2>
+          <div>
         {this.state.todos.map(item => (
         <div key={item.id}>          
-     
-        <h1>{item.task_title}</h1>
+        <h4>{item.task_title}</h4>
         <span>{item.body_desc}</span>
-        </div>
+        </div>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
         ))}
         </div>
+      </div>
+      
         );
         }
   
   }
   
-
-
 export default App;

@@ -161,6 +161,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_DIRS = [
+# fix here its as named below instead of STATIC_DIRS <- uncomplete
+STATICFILES_DIRS = [
     os.path.join(BASE_DIR, '../frontend/build/static')
 ]
