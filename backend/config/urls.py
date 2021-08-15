@@ -20,6 +20,10 @@ from django.views.generic import TemplateView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    
+    #We can access to the whole URLS defined in todos-app 
+    #Throught this one 
     path('api/', include('todos.urls')),
+    #path('api/todos/', include('todos.urls')),
     path('', TemplateView.as_view(template_name='index.html'))
 ]
