@@ -1,18 +1,25 @@
 from django.conf.urls import url
 from django.urls import path
-from .views import ListTodo, DetailTodo, todo_list
+from rest_framework import views
+
+#from .views import ListTodo, DetailTodo, todo_list
+from .views import UserList
+
 # Adds on 
-from django.conf import settings
-from django.conf.urls.static import static
+
 
 urlpatterns = [
-    path('<int:pk>/', DetailTodo.as_view()),
-    path('', ListTodo.as_view()),   
+
+    #path('<int:pk>/', DetailTodo.as_view()),
+    #path('', ListTodo.as_view()),  
+    
 
     #We are exporting the urls - app
 
-    path('todos/', todo_list),
-    path('todos/<int:pk>/', todo_list)
+    path('users/', UserList.as_view()),
+    
+    #path('todos/<int:pk>/', todo_list),
+
 ] 
 
 # + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

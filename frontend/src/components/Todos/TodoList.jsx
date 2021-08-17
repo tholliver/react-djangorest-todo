@@ -41,6 +41,9 @@ const useStyles = makeStyles((theme) => ({
     color: "white",
     /* backgroundColor: theme.palette.background.paper, */
   },
+  floatingLabelFocusStyle: {
+    color: "white",
+  },
 }));
 
 // Second styling
@@ -58,6 +61,7 @@ const GreenRadio = withStyles({
 const list = dummy;
 
 export default function TodoList() {
+  //Defining all in  states -> Hooks
   const classes = useStyles();
   const [checked, setChecked] = React.useState([1]);
   const [data, setData] = useState([]);
@@ -124,7 +128,12 @@ export default function TodoList() {
               />
 
               <ListItemSecondaryAction>
-                <Checkbox color="primary" />
+                <Checkbox
+                  color="primary"
+                  edge="end"
+                  onChange={handleToggle(value)}
+                  checked={checked.indexOf(value) !== -1}
+                />
               </ListItemSecondaryAction>
             </ListItem>
           );
@@ -134,6 +143,7 @@ export default function TodoList() {
       <div>
         <form className={classes.roots} noValidate autoComplete="off">
           <TextField
+            floatingLabelFocusStyle={classes.floatingLabelFocusStyle}   
             InputProps={{
               className: classes.inputs,
             }}
@@ -143,6 +153,7 @@ export default function TodoList() {
           />
           <br />
           <TextField
+            floatingLabelFocusStyle={classes.floatingLabelFocusStyle}
             InputProps={{
               className: classes.inputs,
             }}
@@ -160,12 +171,13 @@ export default function TodoList() {
           display: "flex",
         }}
       >
-        <div style={{
-          width: "80%",
-          float:"left",
-          padding: "20px",
-         
-        }} >
+        <div
+          style={{
+            width: "80%",
+            float: "left",
+            padding: "20px",
+          }}
+        >
           <Radio
             checked={selectedValue === "a"}
             onChange={handleChange}
@@ -195,14 +207,15 @@ export default function TodoList() {
             name="radio-button-demo"
             inputProps={{ "aria-label": "D" }}
           />
-         
         </div>
 
-        <div style={{
-          width: "20%",
-          float: "left",
-          padding: "20px",
-        }} >
+        <div
+          style={{
+            width: "20%",
+            float: "left",
+            padding: "20px",
+          }}
+        >
           <Fab color="primary" aria-label="add">
             <AddIcon />
           </Fab>
