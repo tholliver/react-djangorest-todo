@@ -38,10 +38,11 @@ class UserList(APIView):
         if(serializer.is_valid()):
             if entries==0:
                 print(f"User new in serial: { serializer.data }")
-                User.objects.create(user_name=new_user_name)
+                userCreted = User.objects.create(user_name=new_user_name)
+                print(f"La new user: {userCreted}")
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             else:
-                return Response({"Messages":"Username taken"}, status=status.HTTP_409_CONFLICT)   
+                return Response({"Message":"Username taken"}, status=status.HTTP_409_CONFLICT)   
             
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -51,37 +52,43 @@ class TodoList(APIView):
     """
     This one will list our users, or create new ones  
     """
-    def get(self, pk, request, format=None):        
-        user = Todo.objects.all()      
+    def get(self, request, format=None):     
         
-        serialized = Todo(user, many=True)
+        entries = User.objects.filter(id=2).count()
+        print(f"List of users: { entries} ")    
+        
+        serialized = TodoSerializer(entries, many=True)
    
         print(f"The json: { serialized }")
-        return Response(serialized , status=status.HTTP_200_OK)
+        return Response(serialized.data , status=status.HTTP_200_OK)
         
-    def post(self, pk, request, format=None):
-        requestCopy = request.data
-        userOnly = requestCopy.pop('user')
-        sometasks = requestCopy.pop('allTasks')
-        
-        serializer = TodoSerializer(data=request.data)
-        
+    def post(self, request, pk, format=None):
+        request_todoCopy = request.data
+               
         #Check if username already exists
-        new_user_name = userOnly.get('user_name') 
-        #user_name=userOnly.user_name
-        #userExits = User.objects.get(user_name=)      
-        print(f"We have: { type(new_user_name) } ")
-        #entries = UserTodo.objects.filter(user={'user_name':new_user_name}).count()
-        entries = User.objects.filter(user_name=new_user_name).count()
-        print(f"List of users: ")
-        #sometasks = request.data.pop('allTasks')
         
-        if serializer.is_valid() and entries==0:           
-            
-            User.objects.create(user=userOnly, allTasks=sometasks)
+        foundUser = User.objects.filter(id=pk).count() 
+        print(f"Nuevos ..........:{ pk }")   
+        if foundUser == 1:
+            #We crete a new key for the request
+            #It adds the user ID to the Forean Key in the new Todo -> Request
+            request_todoCopy['user'] = pk
+            serializer = TodoSerializer(data=request_todoCopy) 
+            if serializer.is_valid():
+                serializer.save()          
+                    
 
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response({"Message":"Username taken"}, status=status.HTTP_409_CONFLICT) 
+
+
+
+        #sometasks = request.data.pop('allTasks')
+        print(foundUser)
+        
+        
 
 
 """

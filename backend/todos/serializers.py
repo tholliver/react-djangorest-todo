@@ -1,4 +1,4 @@
-
+from django.utils.functional import empty
 from rest_framework import serializers
 from .models import Todo, User 
 
@@ -8,11 +8,12 @@ class TodoSerializer(serializers.ModelSerializer):
         fields = ['user','task_title', 'priority', 'body_desc', 'task_completed']
         
         
-class UserSerializer(serializers.ModelSerializer):    
+class UserSerializer(serializers.ModelSerializer):
+    tasks = TodoSerializer(required=False, many=True)    
     #user_todos = TodoSerializer(required=False) #We do not added the many attribute
     class Meta:
         model = User
-        fields = '__all__'
+        fields = ['id','user_name','join_date','tasks']
         
         
         #['user_name', 'join_date']
