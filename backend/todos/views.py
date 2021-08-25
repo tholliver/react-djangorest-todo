@@ -52,14 +52,10 @@ class TodoList(APIView):
     """
     This one will list our users, or create new ones  
     """
-    def get(self, request, format=None):     
+    def get(self, request, pk, format=None):     
         
-        entries = User.objects.filter(id=2).count()
-        print(f"List of users: { entries} ")    
-        
-        serialized = TodoSerializer(entries, many=True)
-   
-        print(f"The json: { serialized }")
+        foundUser = Todo.objects.filter(user=pk)     
+        serialized = TodoSerializer(foundUser, many=True)
         return Response(serialized.data , status=status.HTTP_200_OK)
         
     def post(self, request, pk, format=None):
@@ -68,7 +64,7 @@ class TodoList(APIView):
         #Check if username already exists
         
         foundUser = User.objects.filter(id=pk).count() 
-        print(f"Nuevos ..........:{ pk }")   
+          
         if foundUser == 1:
             #We crete a new key for the request
             #It adds the user ID to the Forean Key in the new Todo -> Request

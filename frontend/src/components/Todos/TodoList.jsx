@@ -1,5 +1,6 @@
-import React, { Component, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
+import Cookies from "js-cookie";
 // Styling
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import List from "@material-ui/core/List";
@@ -12,7 +13,7 @@ import Icon from "@material-ui/core/Icon";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import Radio from "@material-ui/core/Radio";
 import TextField from "@material-ui/core/TextField";
-
+import { useHistory } from "react-router-dom";
 //New adds
 //import Button from '@material-ui/core/Button';
 import AddIcon from "@material-ui/icons/Add";
@@ -31,9 +32,11 @@ const useStyles = makeStyles((theme) => ({
     /* backgroundColor: theme.palette.background.paper, */
   },
   roots: {
+    width: "100%",
     "& .MuiTextField-root": {
       margin: theme.spacing(1),
-      width: "33.6ch",
+
+      alignItems: "center",
       color: "white",
     },
   },
@@ -43,6 +46,14 @@ const useStyles = makeStyles((theme) => ({
   },
   floatingLabelFocusStyle: {
     color: "white",
+  },
+  formFileds: {
+    margin: theme.spacing(1),
+    display: "flex",
+
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
   },
 }));
 
@@ -66,6 +77,43 @@ export default function TodoList() {
   const [checked, setChecked] = React.useState([1]);
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+
+  let history = useHistory();
+
+   const handleButtonClicked = () => {
+    const csrftoken = Cookies.get("csrftoken");
+    // From this one
+    const headers = {
+      "Content-Type": "application/json",
+      "X-CSRFToken": csrftoken,
+    };
+    var titleG = title;
+    var descG = description;
+    console.log("Title:", titleG);
+    console.log("Description:", descG);
+    let newTodo = {
+      task_title: titleG,
+      body_desc: descG,
+      priority: "A",
+      task_completed: "False",
+    };
+    //Here send to some where else
+    //192.168.1.6:8000/api/users/todos/2/
+      axios
+      .post("api/users/tawaitodos/2/", newTodo, { headers })
+      .then( (res) => {
+        const apiData = res.data;
+        console.log("The response.... :",  res.data);
+
+        window.location.reload();
+        //setTodos(res.data);
+      })
+      .catch((err) => {
+        console.log("Los errores: ", err);
+      });
+  };
 
   const handleToggle = (value) => () => {
     const currentIndex = checked.indexOf(value);
@@ -88,9 +136,10 @@ export default function TodoList() {
   };
 
   useEffect(() => {
-    setData(list);
+    //setData(list);
+    //192.168.1.6:8000/api/users/todos/2/
     axios
-      .get("api/")
+      .get("api/users/todos/2/")
       .then((res) => {
         console.log("Empty? :", res.data);
         //setTodos(res.data);
@@ -141,18 +190,26 @@ export default function TodoList() {
       </List>
 
       <div>
-        <form className={classes.roots} noValidate autoComplete="off">
+        <form
+          className={classes.formFileds}
+          noValidate
+          autoComplete="off"
+          onSubmit={handleButtonClicked.bind(this)}
+        >
           <TextField
-            floatingLabelFocusStyle={classes.floatingLabelFocusStyle}   
+            style={{ width: "100%" }}
+            floatingLabelFocusStyle={classes.floatingLabelFocusStyle}
             InputProps={{
               className: classes.inputs,
             }}
             id="filled-basic"
             label="Task"
             variant="filled"
+            onChange={(e) => setTitle(e.target.value)}
           />
           <br />
           <TextField
+            style={{ width: "100%" }}
             floatingLabelFocusStyle={classes.floatingLabelFocusStyle}
             InputProps={{
               className: classes.inputs,
@@ -163,7 +220,20 @@ export default function TodoList() {
             rows={2}
             defaultValue=" "
             variant="outlined"
+            onChange={(e) => setDescription(e.target.value)}
           />
+
+          <div
+            style={{
+              width: "20%",
+              float: "left",
+              padding: "20px",
+            }}
+          >
+            <Fab color="primary" aria-label="add" type="submit">
+              <AddIcon />
+            </Fab>
+          </div>
         </form>
       </div>
       <div
@@ -209,17 +279,7 @@ export default function TodoList() {
           />
         </div>
 
-        <div
-          style={{
-            width: "20%",
-            float: "left",
-            padding: "20px",
-          }}
-        >
-          <Fab color="primary" aria-label="add">
-            <AddIcon />
-          </Fab>
-        </div>
+        <p hidden></p>
       </div>
     </div>
   );
