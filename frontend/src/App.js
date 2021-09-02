@@ -14,12 +14,14 @@ class App extends Component {
             justifyContent: "center",
             alignItems: "center",
             textAlign: "center",
+            
           }}
         >
           <div>
           <h1
             style={{
               color: "white",
+              fontFamily: "Roboto Mono",
             }}
           >
             Now showing an component...
@@ -28,6 +30,7 @@ class App extends Component {
           <h3
             style={{
               color: "white",
+              fontFamily: "Roboto Mono",
             }}
           >
             Gotta complete this ones:
@@ -40,6 +43,7 @@ class App extends Component {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
+            fontFamily: "Roboto Mono",
           }}
         >
           <TodoList />

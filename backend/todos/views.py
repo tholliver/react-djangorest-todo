@@ -1,5 +1,6 @@
 from rest_framework.views import APIView
 from .models import Todo, User
+from django.db.models import Q
 # adds on
 from rest_framework import  status
 from rest_framework.response import Response 
@@ -54,7 +55,8 @@ class TodoList(APIView):
     """
     def get(self, request, pk, format=None):     
         
-        foundUser = Todo.objects.filter(user=pk)     
+        foundUser = Todo.objects.filter(user=pk, task_completed__in=[False])        
+        #filterRed = foundUser.filter(task_completed=False, user=pk)
         serialized = TodoSerializer(foundUser, many=True)
         return Response(serialized.data , status=status.HTTP_200_OK)
         
@@ -71,8 +73,7 @@ class TodoList(APIView):
             request_todoCopy['user'] = pk
             serializer = TodoSerializer(data=request_todoCopy) 
             if serializer.is_valid():
-                serializer.save()          
-                    
+                serializer.save()               
 
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -83,9 +84,19 @@ class TodoList(APIView):
 
         #sometasks = request.data.pop('allTasks')
         print(foundUser)
-        
-        
+    
 
+    def put(self, request, pk, format=None):
+        LaDict = request.data
+        leLIst = list(LaDict.values())
+        #print(leLIst)
+        foundUser = Todo.objects.filter(id__in=leLIst).update(task_completed=True) 
+        
+        if foundUser:
+            print(f"Found list:{foundUser}")
+            return Response({"Succesfully":"Updated list or object"} , status=status.HTTP_200_OK)       
+        
+        return Response({"Messages":"Error on request"} , status=status.HTTP_400_BAD_REQUEST)
 
 """
 

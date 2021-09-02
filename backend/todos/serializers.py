@@ -5,7 +5,7 @@ from .models import Todo, User
 class TodoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Todo
-        fields = ['user','task_title', 'priority', 'body_desc', 'task_completed']
+        fields = ['id','user','task_title', 'priority', 'body_desc', 'task_completed']
         
         
 class UserSerializer(serializers.ModelSerializer):
