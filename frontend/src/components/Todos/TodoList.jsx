@@ -51,7 +51,6 @@ const useStyles = makeStyles((theme) => ({
   formFileds: {
     margin: theme.spacing(1),
     display: "flex",
-
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
@@ -186,7 +185,7 @@ export default function TodoList() {
     axios
       .get("api/users/todos/2/")
       .then((res) => {
-        console.log("Empty? :", res.data);
+        //console.log("Empty? :", res.data);
         //setTodos(res.data);
         setData(res.data);
         setIsLoading(false);
@@ -230,7 +229,7 @@ export default function TodoList() {
                 fontFamily: "Roboto",
               }}
             >
-              Someone has been 🐒 around...{" "}
+              Someone has been 🐒 around...
             </p>
           </div>
         )}
